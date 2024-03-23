@@ -4,66 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    
     <title>Computação Gráfica</title>
+   
     <script src="scripts/script.js" ></script>
+   
+
 </head>
 
 <body>
+
     <header>
+
         <h2>Computação Gráfica</h2>
+        
         <div class="grupo">
             <p>Arthur Felipe Muniz Sales</p>
             <p>Rafael Tertuliano</p>
-            <p>Victor Emanoel</p>            
+            <p>Victor Emmanoel</p>            
         </div>        
+
+        
     </header>
 
     <main class="main">
+
         <div class="main_conteudo-geral">
+
             <section class="main_content-painelInfo">
+                
                 <div class="opcaoDeDesenho">
+                    
                     <label><input type="checkbox" class="opcaoEscolhida" id="2D"> 2D </label><br>
                     <label><input type="checkbox" class="opcaoEscolhida" id="3D"> 3D </label><br>
+
                 </div>
+
                 <div class="saidaDeInformacoes">
+
                     <h2>Informações</h2>
+
                     <div class="informacoes" id="coordMundo">
                         <h6>Coord. Mundo - CW</h6>
                         <p></p>
                     </div>
+
                     <div class="informacoes" id="coordNorm">
                         <h6>Coord. Norm. - NDC</h6>
                         <p></p>
                     </div>
+
                     <div class="informacoes" id="coordTela">
                         <h6>Coord. Tela - DC</h6>
                         <p></p>
                     </div>
-                    <div>
-                        <button id="limparCanvas">Limpar Canvas</button>
-                    </div>
+
                 </div>
+                
             </section>
 
             <section class="main_content-painel">
+
                 <div class="aplicaFuncoes">
-                    <div>
-                        <input type="checkbox" class="funcaoParaSerExecultada" id="pixel"><label id="labelPixel"> .................</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" class="funcaoParaSerExecultada" id="retaDDA"><label id="labelRetaDDA"> ................. </label>
-                    </div>
-                    <div>
-                        <input type="checkbox" class="funcaoParaSerExecultada" id="retaPontoMedio"><label id="labelRetaPontoMedio"> ................. </label>
-                    </div>
-                    <div>
-                        <input type="checkbox" class="funcaoParaSerExecultada" id="circunferenciaPontoMedio"><label id="labelCircunferenciaPMedio"> ................ </label>
-                        <input type="number" id="raio" placeholder="Raio">
-                    </div>
-    	        </div>
+                    
+                    <div><input type="checkbox" class="funcaoParaSerExecultada" id="pixel"><label id="labelPixel"> .................</label></div>
+                    <div><input type="checkbox" class="funcaoParaSerExecultada" id="retaDDA"><label id="labelRetaDDA"> ................. </label></div>
+                    <div><input type="checkbox" class="funcaoParaSerExecultada" id="retaPontoMedio"><label id="labelRetaPontoMedio"> ................. </label></div>
+                    <div><input type="checkbox" class="funcaoParaSerExecultada" id="circunferenciaPontoMedio"><label id="labelCircunferenciaPMedio"> ................. </label></div>
+
+                </div>
+
                 <div class="painel2D">
                     <canvas id="canvas"></canvas>
                 </div>                
+            
             </section>
 
         </div>

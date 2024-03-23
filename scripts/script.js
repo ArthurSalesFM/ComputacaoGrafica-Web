@@ -2,18 +2,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Inicialização das variáveis globais
 
-    /**TESTETSTEJGALDSKJGÇDSKJ
-     * kjdsahlfkjsahdgf
-     * sdgf[]ajsfdglsfdh
-     * fdg
-     * jd
-     * gfhj
-     * ghj
-     * fghj
-     */
-
-
-
     //sobre o canvas
     const painel2D = document.querySelector('.painel2D');
     const canvas = painel2D.querySelector('canvas');
@@ -364,5 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
             desenhaNoCanvasODesenho2DEscolhido(posicaoMouse.x, posicaoMouse.y);
         }
     });
+
+    function testeteste(){
+        ponto_circulo();
+    }
     
 });
