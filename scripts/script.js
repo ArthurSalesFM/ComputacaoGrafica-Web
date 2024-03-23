@@ -1,7 +1,18 @@
+
+/*
+
+    Realizar as correções e alterações.
+
+*/
+
+
+
+
+
 // Carregamento do DOM
 document.addEventListener('DOMContentLoaded', () => {
     // Inicialização das variáveis globais
-
+    
     //sobre o canvas
     const painel2D = document.querySelector('.painel2D');
     const canvas = painel2D.querySelector('canvas');
