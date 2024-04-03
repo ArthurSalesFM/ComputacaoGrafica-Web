@@ -36,6 +36,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const centroX = largura/2;
     const centroY = altura/2;
 
+    // Seletor para todos os checkboxes dentro de .configPanel2D_opcoes_transformacoes
+    const checkboxes = document.querySelectorAll('.configPanel2D_opcoes_transformacoes input[type="checkbox"]');
+
+    // inputs de entradas das transformações
+    //const xTranslacao = document.getElementById('xTranslacao').value;
+    //const yTranslacao = document.getElementById('yTranslacao').value;
+    const xEscala = document.getElementById('xEscala');
+    const yEscala = document.getElementById('yEscala');
+    const AnguloRotacao = document.getElementById('AnguloRotacao');
+    const xCisalhamento = document.getElementById('xCisalhamento');
+    const yCisalhamento = document.getElementById('yCisalhamento');
+
+    //Botões das transformações
+    const btnAplicaTransformacoes = document.getElementById('btnAplicaTransformacoes');
+    const btnLimpaTransformacoes = document.getElementById('btnLimpaTransformacoes');
+
+    const verticesIniciaisDoQuadrado = [
+        [centroX, centroX + 50, centroX + 50, centroX],
+        [centroY, centroY, centroY - 50, centroY - 50],
+        [1, 1, 1, 1]
+    ];
+
+    const inputOpcoes = document.getElementById("opcoes");
+
     /* **********************************************************
         Sobre as coordenadas e posição do mouse no canvas 
     */
@@ -218,24 +242,112 @@ document.addEventListener('DOMContentLoaded', () => {
         ativaPixel(-x, y);
     }
 
+    //Função para limpar o canvas
+    function limpaTela(){
+        // Limpa o conteúdo do canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    /* ***************************TRANSFORMAÇÕES*************************** */
+
+    // Função para desenhar os eixos X e Y para visualizar as transformações
+    function desenharEixos() {
+        // Desenhar eixo X
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height / 2);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
+
+        // Desenhar eixo Y
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2, 0);
+        ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke();
+    } 
+
+    
+    function Translacao(matrizBase, tx, ty) {
+        console.log('Translação aplicada: tx =', tx, 'ty =', ty);
+    
+        const matrizTranslacao = [
+            [1, 0, tx],
+            [0, 1, ty],
+            [0, 0, 1]
+        ];
+    
+        const matrizResultado = multiplicarMatrizes(matrizTranslacao, matrizBase);
+    
+        console.log('Matriz resultante após translação:');
+        console.log(matrizResultado);
+    
+        return matrizResultado;
+    }
+
+    // Função para multiplicar duas matrizes
+    function multiplicarMatrizes(matrizA, matrizB) {
+        const linhasA = matrizA.length;
+        const colunasA = matrizA[0].length;
+        const colunasB = matrizB[0].length;
+        const matrizResultado = [];
+
+        for (let i = 0; i < linhasA; i++) {
+            matrizResultado[i] = [];
+            for (let j = 0; j < colunasB; j++) {
+                let soma = 0;
+                for (let k = 0; k < colunasA; k++) {
+                    soma += matrizA[i][k] * matrizB[k][j];
+                }
+                matrizResultado[i][j] = soma;
+            }
+        }
+
+        return matrizResultado;
+    }
+
+    //var matrizModificada = verticesIniciaisDoQuadrado;
+
+
+    let matrizModificada = [
+            [centroX, centroX + 50, centroX + 50, centroX],
+            [centroY, centroY, centroY - 50, centroY - 50],
+            [1, 1, 1, 1]
+    ];
+
+    function desenharQuadrado(vertices) {
+        console.log('Coordenadas dos vértices do quadrado:');
+        console.log(vertices);
+    
+        ctx.beginPath();
+        ctx.moveTo(vertices[0][0], vertices[1][0]);
+    
+        for (var i = 1; i < vertices[0].length; i++) {
+            ctx.lineTo(vertices[0][i], vertices[1][i]);
+        }
+    
+        ctx.closePath();
+        ctx.strokeStyle = 'red';
+        ctx.stroke();
+    }
+
+
     // Adiciona um ouvinte de evento para o movimento do mouse no canvas para atualização das coordenadas
     canvas.addEventListener("mousemove", atualizarCoordenadas);
 
     // Ouvinte de evento para o botão "LimparPixel"
     btnLimparPixel.addEventListener('click', () => {
         // Limpa o conteúdo do canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        limpaTela();
     });
 
     // Ouvinte de evento para o botão "LimparRetas"
     btnLimparReta.addEventListener('click', () => {
         // Limpa o conteúdo do canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        limpaTela();
     });
 
     btnLimparCircunferencia.addEventListener('click', () =>{
         // Limpa o conteúdo do canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        limpaTela();
     })
 
     // Ouvinte de evento para o botão "DesenharPixel"
@@ -321,5 +433,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
     });
+
+    //Ouvinte para verificar se a opção selecionada foi a de transformações
+    inputOpcoes.addEventListener('change', () =>{
+
+        var opcaoSelecionada = inputOpcoes.value;
+
+        if(opcaoSelecionada === "opcao7"){
+
+            limpaTela();
+            desenharEixos();
+            //var verticesQuadrado = verticesIniciaisDoQuadrado(centroX, centroY);
+            desenharQuadrado(verticesIniciaisDoQuadrado);
+        }
+        
+
+    });
+
+
+
+
+
+// Função para adicionar ouvintes de eventos aos checkboxes
+function adicionarOuvintesCheckbox() {
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            //console.log('Checkbox', checkbox.id, 'clicado');
+            // Você pode adicionar mais lógica aqui se necessário
+        });
+    });
+}
+
+// Função para aplicar a transformação desejada
+function aplicarTransformacao() {
+    // Verifica se o checkbox de translação está marcado
+    if (document.getElementById('checkTranslacao').checked) {
+        // Verifica se os valores de translação são válidos
+        const xTranslacao = parseFloat(document.getElementById('xTranslacao').value);
+        const yTranslacao = parseFloat(document.getElementById('yTranslacao').value);
+        
+        if (!isNaN(xTranslacao) && !isNaN(yTranslacao)) {
+            // Aplica a translação à matriz de vértices
+            matrizModificada = Translacao(matrizModificada, xTranslacao, yTranslacao);
+            
+            // Limpa o canvas
+            limpaTela();
+            
+            // Desenha os eixos
+            desenharEixos();
+            
+            // Desenha o quadrado com as novas coordenadas após a translação
+            desenharQuadrado(matrizModificada);
+        } else {
+            alert('Por favor, insira valores numéricos válidos para a translação.');
+        }
+    }
+}
+
+// Adiciona ouvintes de eventos aos checkboxes
+adicionarOuvintesCheckbox();
+
+// Aplica a transformação desejada quando o botão é clicado
+btnAplicaTransformacoes.addEventListener('click', aplicarTransformacao);
 
 });

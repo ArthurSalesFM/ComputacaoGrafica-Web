@@ -83,11 +83,10 @@
 
                 <!-- PAINEL ENTRADA DAS COORDENADAS DO PIXEL X - Y -->
                 <div class="configPanel2D_opcoes_pixel" style="display: none;">
+                    <h6>Digite o ponto</h6>
 
-                    <div class="entradaDeDados">
-                        <h6>Digite o ponto</h6>
-                        <label>X : <input type="number" id="inputXPixel"></label><br>                    
-                        
+                    <div class="entradaDeDados">                        
+                        <label>X : <input type="number" id="inputXPixel"></label><br>                        
                         <label>Y : <input type="number" id="inputYPixel"></label>
                     </div>
 
@@ -102,6 +101,7 @@
                 <!-- PAINEL ENTRADA DAS COORDENADAS DAS RETAS P1(X , Y) E P2(X , Y) -->
                 <div class="configPanel2D_opcoes_retas" style="display: none;">
                     <h6>Digite os Pontos</h6>
+
                     <div class="configPanel2D_opcoes_retas_pontos">
                         
                         <div class="ponto1">
@@ -125,6 +125,7 @@
                 <!-- PAINEL ENTRADA DO RAIO DA CIRCUNFERENCIA -->
                 <div class="configPanel2D_opcoes_circunferencias" style="display: none;">
                     <h6>Digite o Raio</h6>
+
                     <label>Raio : <input type="number" id="inputRaio"></label>
 
                     <div class="botoesDeAtivarELimpar">
@@ -135,7 +136,61 @@
 
                 <!-- PAINEL ENTRADA DAS OPÇÕES DE TRANSFORMAÇÕES -->
                 <div class="configPanel2D_opcoes_transformacoes" style="display: none;">
-                    <h6>teste transformacoes</h6>
+
+                    <div class="transformacoes2D">
+                        <div class="transformacoes2D_sub">
+                            <label><input type="checkbox" id="checkTranslacao" > Translação</label>                           
+                        </div>
+                        <div class="transformacoes2D_entradas">
+                            <label>X : <input type="number" id="xTranslacao"></label>
+                            <label>Y : <input type="number" id="yTranslacao"></label> 
+                        </div>                       
+                    </div>
+
+                    <div class="transformacoes2D">
+                        <div class="transformacoes2D_sub">
+                            <label><input type="checkbox" id="checkEscala" > Escala</label>                            
+                        </div>
+                        <div class="transformacoes2D_entradas">
+                            <label>X : <input type="number" id="xEscala"></label>
+                            <label>Y : <input type="number" id="yEscala"></label>
+                        </div>
+                    </div>
+
+                    <div class="transformacoes2D">
+                        <div class="transformacoes2D_sub">
+                            <label><input type="checkbox" id="checkRotacao" > Rotação</label>
+                        </div>
+                        <div class="transformacoes2D_entradas">
+                            <label>Angulo : <input type="number" id="AnguloRotacao"></label>
+                        </div>
+                    </div>
+
+                    <div class="transformacoes2D">
+                        <div class="transformacoes2D_sub">
+                            <label><input type="checkbox" id="checkCisalhamento" > Cisalhamento</label>
+                        </div>
+                        <div class="transformacoes2D_entradas">
+                            <label>X : <input type="number" id="xCisalhamento"></label>
+                            <label>Y : <input type="number" id="yCisalhamento"></label>
+                        </div>
+                    </div>
+
+                    <div class="transformacoes2D">
+                        <div class="transformacoes2D_sub">
+                            <label><input type="checkbox" id="checkReflexao" > Reflexão</label>
+                        </div>
+                        <div class="transformacoes2D_entradas">
+                            <label>X : <input type="number" id="xReflexao"></label>
+                            <label>Y : <input type="number" id="yReflexao"></label>
+                        </div>
+                    </div>
+
+                    <div class="botoesDeAtivarELimpar">
+                        <button id="btnAplicaTransformacoes">Aplicar</button>
+                        <button id="btnLimpaTransformacoes">Limpar</button>
+                    </div>
+
                 </div>
 
 

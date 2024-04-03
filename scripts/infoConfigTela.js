@@ -10,6 +10,43 @@ window.onload = function() {
     const divRetas = document.querySelector('.configPanel2D_opcoes_retas');
     const divCircunferencias = document.querySelector('.configPanel2D_opcoes_circunferencias');
     const divTransformacoes = document.querySelector('.configPanel2D_opcoes_transformacoes');
+    
+    // Seletor para todos os checkboxes dentro de .configPanel2D_opcoes_transformacoes
+    const checkboxes = document.querySelectorAll('.configPanel2D_opcoes_transformacoes input[type="checkbox"]');
+
+    // inputs de entradas das transformações
+    const xTranslacao = document.getElementById('xTranslacao');
+    const yTranslacao = document.getElementById('yTranslacao');
+    const xEscala = document.getElementById('xEscala');
+    const yEscala = document.getElementById('yEscala');
+    const AnguloRotacao = document.getElementById('AnguloRotacao');
+    const xCisalhamento = document.getElementById('xCisalhamento');
+    const yCisalhamento = document.getElementById('yCisalhamento');
+
+
+    function desativaEntradasDeValoresDasTransformacoes(){
+        xTranslacao.disabled = true;
+        yTranslacao.disabled = true;
+        xEscala.disabled = true;
+        yEscala.disabled = true;
+        AnguloRotacao.disabled = true;
+        xCisalhamento.disabled = true;
+        yCisalhamento.disabled = true;
+
+        limpaCampoDasEntradas();
+    }
+
+    function limpaCampoDasEntradas(){
+        xTranslacao.value = "";
+        yTranslacao.value = "";
+        xEscala.value = "";
+        yEscala.value = "";
+        AnguloRotacao.value = "";
+        xCisalhamento.value = "";
+        yCisalhamento.value = "";
+    }
+
+    desativaEntradasDeValoresDasTransformacoes();
 
     checkbox2D.addEventListener('change', function() {
         if (this.checked) {
@@ -109,5 +146,54 @@ window.onload = function() {
                 break;
         }
     }
+
+    // Adiciona um ouvinte de evento de mudança para cada checkbox
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+
+            switch(this.id){
+
+                case "checkTranslacao":
+                    desativaEntradasDeValoresDasTransformacoes();
+                    xTranslacao.disabled = false;
+                    yTranslacao.disabled = false;
+                break;
+
+                case "checkEscala":
+                    desativaEntradasDeValoresDasTransformacoes();
+                    xEscala.disabled = false;
+                    yEscala.disabled = false;
+                break;
+
+                case "checkRotacao":
+                    desativaEntradasDeValoresDasTransformacoes();
+                    AnguloRotacao.disabled = false;
+                break;
+
+                case "checkCisalhamento":
+                    desativaEntradasDeValoresDasTransformacoes();
+                    xCisalhamento.disabled = false;
+                    yCisalhamento.disabled = false;
+                break;
+
+            }
+
+            // Se o checkbox foi marcado
+            if (this.checked) {
+                // Desmarca todos os outros checkboxes dentro do mesmo bloco pai
+                const checkboxesInSameParent = this.closest('.configPanel2D_opcoes_transformacoes').querySelectorAll('input[type="checkbox"]');
+                checkboxesInSameParent.forEach(function(cb) {
+                    if (cb !== checkbox) {
+                        cb.checked = false;
+                    }
+                });
+            }
+        });
+    });
+
+
+
+
+
 
 };

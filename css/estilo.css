@@ -69,6 +69,11 @@ head div, h1{
     margin-bottom: 5px;
 }
 
+.saidaDeCoordenadasTransformadas h2{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .informacoes{
     border-top: 1px dashed #000;
 }
@@ -81,6 +86,7 @@ head div, h1{
 .informacoes p{
     margin-top: 2px;
     font-size: 12px;
+    margin-bottom: 1px;
 }
 
 .configPanel2D{
@@ -130,6 +136,7 @@ head div, h1{
 
 .configPanel2D_opcoes_pixel h6{
     margin-top: 1px;
+    margin-bottom: 2px;
 }
 
 .configPanel2D_opcoes_retas{
@@ -144,6 +151,7 @@ head div, h1{
 
 .configPanel2D_opcoes_retas h6{
     margin-top: 1px;
+    margin-bottom: 2px;
 }
 
 .configPanel2D_opcoes_retas_pontos{
@@ -177,4 +185,52 @@ head div, h1{
 
 .configPanel2D_opcoes_circunferencias h6{
     margin-top: 1px;
+    margin-bottom: 2px;
 }
+
+.configPanel2D_opcoes_transformacoes{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #000;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+/*Aplicando a regra a todas as classes transformacoes2D(menos na primeira encontrada) */
+.transformacoes2D:not(:first-child) {
+    border-top: 1px dashed #000;
+}
+
+.transformacoes2D{
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+}
+
+.transformacoes2D_sub{
+    display: flex;
+    flex-direction: row;
+    justify-content: left; 
+    text-align: center;
+    margin-top: 5px;   
+}
+
+.transformacoes2D_sub label{
+    font-size: 15px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+}
+
+.transformacoes2D_entradas{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 5px;
+}
+
+.transformacoes2D_entradas input[type="number"]{
+    width: 60px; /* Define a largura */
+    height: 15px; /* Define a altura */
+}
+
+
