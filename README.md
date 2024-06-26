@@ -31,5 +31,6 @@
 - 14º [] - Implementar visualizações
 - 15º [] - Corrigir Bug (Ao transferir para VP um objeto do tipo reta, ao mudar para circunferencia, desenhar objeto e transferir para vp, não é transferido a circunferencia e sim uma reta novamente, esta acontecendo com todos os tipos de desenho)
 - 16º [x] - Corrigir escala 3D fora da origem
-- 16º [] - Corrigir rotação 3D fora da origem
-- 18º [] - Corrigir reflexão 3D com objeto com cor
+- 17º [x] - Corrigir rotação 3D fora da origem
+- 18º [x] - Corrigir cisalhamento 3D fora da origem
+- 19º [] - Corrigir reflexão 3D com objeto com cor
