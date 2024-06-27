@@ -12,7 +12,7 @@ import { desenharECG, continuarExecucao } from './algoritimos/batimentosCoardiac
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    /*Canvas onde o usuário realiza os desenhos*/
+    /*Canvas onde o usuário realiza os desenhos 2D*/
     const painel2D = document.querySelector('.main_conteudo-painelDesenho');
     const canvas = painel2D.querySelector('canvas');    
     let ctx = canvas.getContext('2d');
@@ -61,6 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAplicaTransformacoes3D = document.getElementById('btnAplicaTransformacoes3D');
     const btnLimpaTransformacoes3D = document.getElementById('btnLimpaTransformacoes3D');
     
+    //botão projeções
+    //inputs de projeções 3D
+    const projecaoPerspectiva = document.getElementById('projecaoPerspectiva');
+    const projecaoParalelaIsometrica = document.getElementById('projecaoParalelaIsometrica');
+    const projecaoParalelaOrtografica = document.getElementById('projecaoParalelaOrtografica');
+    const btnAplicaProjecoes = document.getElementById('btnAplicaProjecoes');
+
     const btnLimparSaidaTextarea = document.getElementById('btnLimparSaidaTextarea');
 
     // botões da mini VP do 
@@ -440,15 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
-    // chama a function aplicarTransformacao(), aplica a transformação desejada quando o botão é clicado
-    btnAplicaTransformacoes.addEventListener('click', () => {
-        //ativa o botão de transferir para viewPort
-        btnTransferirParaViewPort.disabled = false;
-        limparSaidaDeDadosTextarea();
-        listaParaAViewPort = [];
-        aplicarTransformacao();
-    });
-
     // Função para aplicar a transformação desejada
     function aplicarTransformacao() {
     
@@ -568,8 +566,88 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+       // chama a function aplicarTransformacao(), aplica a transformação desejada quando o botão é clicado
+    btnAplicaTransformacoes.addEventListener('click', () => {
+        //ativa o botão de transferir para viewPort
+        btnTransferirParaViewPort.disabled = false;
+        limparSaidaDeDadosTextarea();
+        listaParaAViewPort = [];
+        aplicarTransformacao();
+    });
+
+    btnDesenharRetaCohen.addEventListener('click', () => {
+        let quantRetas = parseInt(inputRetas.value);
+
+        if(isNaN(quantRetas) || quantRetas <= 0){
+            alert("Digite os valores validos para os pontos.");
+        }
+        //limpa as coordenadas anteriores
+        matrizCoordRetas = []
+
+        //preenche a matriz com coordenadas aleatorias no intervalo de -700 e 700
+        for(let i = 0; i < quantRetas; i++){
+            const min = -700;
+            const max = 700;
+            
+            let X1 = Math.random() * (max - min) + min;
+            let Y1 = Math.random() * (max - min) + min;
+            let X2 = Math.random() * (max - min) + min;
+            let Y2 = Math.random() * (max - min) + min;
+
+            matrizCoordRetas.push({ X1, Y1, X2, Y2 }); // Armazena as coordenadas no array
+            DDA(X1, Y1, X2, Y2, ctx); //deseha a reta
+        }
+
+    });
+
+    btnAplicarCohen.addEventListener('click', () => {
+        //armazenando xmin ymin xmax ymax da area de recort
+        const xmin = matrizAreaDeRecorte[0][3];
+        const ymin = matrizAreaDeRecorte[1][0];
+        const xmax = matrizAreaDeRecorte[0][1];
+        const ymax = matrizAreaDeRecorte[1][2];
+
+        //limpa a tela antes de redesenhar as retas
+        limpaTela(ctx);
+        desenhar.CohenSutherland(ctx, altura, largura);
+        desenhar.Quadrado(matrizAreaDeRecorte, ctx);
+        limparSaidaDeDadosTextarea();
+        setarDadosParaSaidaDeDados("\nNovas Coordenadas das Retas: \n\n");
+        
+        //percorre a matriz de coordenadas e redesenha as retas que foram retornadas do alg de cohen
+        for(const coord of matrizCoordRetas){
+            let newCoords = cohenSutherland(coord.X1, coord.Y1, coord.X2, coord.Y2, xmin, ymin, xmax, ymax);
+
+            if (newCoords) { //se o retorno de cohenSutherland n for null redesenha as retas recortadas
+                const { x1, y1, x2, y2 } = newCoords;
+                DDA(x1, y1, x2, y2, ctx, "lightseagreen"); 
+            }
+
+        }
+
+    });
+
+    btnAplicarBatimentos.addEventListener('click', () => {
+        let idade = parseInt(inputIdade.value);
+        let situacao = parseInt(inputSituacao.value);
+        if(isNaN(idade) || isNaN(situacao)){
+            alert("Digite os valores dos pontos.");
+        }else{
+            if(continuarExecucao){
+                cancelAnimationFrame(continuarExecucao);
+            }
+            desenharECG(canvas,ctx, idade, situacao);
+        }
+    });
+
     function aplicarTransformacao3D(){
         let matrizTransformada = matrizBaseGeral3D.slice();
+        //verifica se foi digitado algum valor, se n for, atribui 0 a variavel
+        function parseInput(value) {
+            const parsedValue = parseFloat(value);
+            return isNaN(parsedValue) ? 0 : parsedValue;
+        }
+
         if(document.getElementById('checkTranslacao3D').checked){
             const tx = parseInput(document.getElementById('xTranslacao3D').value);
             const ty = parseInput(document.getElementById('yTranslacao3D').value);
@@ -640,78 +718,107 @@ document.addEventListener('DOMContentLoaded', () => {
 
         desenhar3D.Cubo(canvas3D, matrizTransformada, facesCubo);   
     }
-    //verifica se foi digitado algum valor, se n for, atribui 0 a variavel
-    function parseInput(value) {
-        const parsedValue = parseFloat(value);
-        return isNaN(parsedValue) ? 0 : parsedValue;
-    }
 
-    btnDesenharRetaCohen.addEventListener('click', () => {
-        let quantRetas = parseInt(inputRetas.value);
+    btnAplicaTransformacoes3D.addEventListener('click', () => {
+        aplicarTransformacao3D();
+    });
 
-        if(isNaN(quantRetas) || quantRetas <= 0){
-            alert("Digite os valores validos para os pontos.");
+    btnAplicaProjecoes.addEventListener('click', () => {
+        let projecao;
+        if(projecaoPerspectiva.checked){
+            projecao = 'perspectiva';
+        }else if(projecaoParalelaIsometrica.checked){
+            projecao = 'isometrica';
+        }else if (projecaoParalelaOrtografica.checked){
+            projecao = 'ortografica';
         }
-        //limpa as coordenadas anteriores
-        matrizCoordRetas = []
+        matrizBaseGeral3D = [
+            [-1, -1, -1, 1],  // V0
+            [1, -1, -1, 1],   // V1
+            [1, 1, -1, 1],    // V2
+            [-1, 1, -1, 1],   // V3
+            [-1, -1, 1, 1],   // V4
+            [1, -1, 1, 1],    // V5
+            [1, 1, 1, 1],     // V6
+            [-1, 1, 1, 1]     // V7
+        ];
+        desenhar3D.CuboVisualizacao(canvas3D, matrizBaseGeral3D, facesCubo, projecao);
+    });
 
-        //preenche a matriz com coordenadas aleatorias no intervalo de -700 e 700
-        for(let i = 0; i < quantRetas; i++){
-            const min = -700;
-            const max = 700;
+    //Ouvinte para verificar se a opção selecionada foi a de transformações ou Cohen e desenhar no canvas
+    inputOpcoes2D.addEventListener('change', () => {
+        var opcaoSelecionada = inputOpcoes2D.value;
+        if(opcaoSelecionada === "opcao8"){
+            limpaTela(ctx);
+            limparSaidaDeDadosTextarea();
+            desenhar.Eixos2D(ctx, canvas);
+            desenhar.Quadrado(matrizBaseGeral, ctx);
+        }
+        else if(opcaoSelecionada === "opcao9"){
+            limpaTela(ctx);
+            limparSaidaDeDadosTextarea();
+            desenhar.Eixos2D(ctx, canvas);
+            desenhar.Quadrado(matrizBaseGeral, ctx);
+        }
+        else if(opcaoSelecionada === "opcao10"){
+            limpaTela(ctx);
+            limparSaidaDeDadosTextarea();
+            desenhar.CohenSutherland(ctx, altura,largura);
+            desenhar.Quadrado(matrizAreaDeRecorte, ctx);
+        }
+        else if(opcaoSelecionada === "opcao11"){
+            limpaTela(ctx);
+            desenhar.batimentosCardiacos(ctx);
+        }
+        else{
+            limpaTela(ctx);
+            limparSaidaDeDadosTextarea();
+        }        
+    });
+
+    inputOpcoes3D.addEventListener('change', () => {
+        let opcao = inputOpcoes3D.value;
+
+        if(opcao === "opcao1"){
+            limparSaidaDeDadosTextarea();
+            desenhar3D.Cubo(canvas3D, matrizBaseGeral3D, facesCubo);
+            /* CRIAR FUNÇÃO DE DESENHAR CUBO */
+        }else if(opcao === "opcao2"){
+            limparSaidaDeDadosTextarea();
+        }else {
+            // nengum selecionado
+            limpaTela(ctx);
             
-            let X1 = Math.random() * (max - min) + min;
-            let Y1 = Math.random() * (max - min) + min;
-            let X2 = Math.random() * (max - min) + min;
-            let Y2 = Math.random() * (max - min) + min;
-
-            matrizCoordRetas.push({ X1, Y1, X2, Y2 }); // Armazena as coordenadas no array
-            DDA(X1, Y1, X2, Y2, ctx); //deseha a reta
         }
-
     });
 
-    btnAplicarCohen.addEventListener('click', () => {
-        //armazenando xmin ymin xmax ymax da area de recort
-        const xmin = matrizAreaDeRecorte[0][3];
-        const ymin = matrizAreaDeRecorte[1][0];
-        const xmax = matrizAreaDeRecorte[0][1];
-        const ymax = matrizAreaDeRecorte[1][2];
+    // limpa a tela se mudar de 2d para 3d ou vice versa, alem de mudar o canvas de 2d pra 3d
+    checkboxEscolhido2dE3d.forEach(function(checkbox) {
+        checkbox.addEventListener('click', function() {
+            if (this.id === '2D') {
+                if (this.checked) {
+                    document.getElementById('3D').checked = false;
+                    canvas3D.style.display = 'none';
+                    canvas.style.display = 'block'; 
+                    limpaTela(ctx);
+                    
+                }
+            } else if (this.id === '3D') {
+                if (this.checked) {
+                    document.getElementById('2D').checked = false;
+                    canvas.style.display = 'none';
+                    canvas3D.style.display = 'block';
+                    desativarAtualizacaoCoordenadas();
+                    desenhar3D.Cubo(canvas3D, matrizBaseGeral3D, facesCubo);
+                    limpaTela(ctx);
 
-        //limpa a tela antes de redesenhar as retas
-        limpaTela(ctx);
-        desenhar.CohenSutherland(ctx, altura, largura);
-        desenhar.Quadrado(matrizAreaDeRecorte, ctx);
-        limparSaidaDeDadosTextarea();
-        setarDadosParaSaidaDeDados("\nNovas Coordenadas das Retas: \n\n");
-        
-        //percorre a matriz de coordenadas e redesenha as retas que foram retornadas do alg de cohen
-        for(const coord of matrizCoordRetas){
-            let newCoords = cohenSutherland(coord.X1, coord.Y1, coord.X2, coord.Y2, xmin, ymin, xmax, ymax);
-
-            if (newCoords) { //se o retorno de cohenSutherland n for null redesenha as retas recortadas
-                const { x1, y1, x2, y2 } = newCoords;
-                DDA(x1, y1, x2, y2, ctx, "lightseagreen"); 
+                }
             }
-
-        }
-
+        });
     });
 
-    btnAplicarBatimentos.addEventListener('click', () => {
-        let idade = parseInt(inputIdade.value);
-        let situacao = parseInt(inputSituacao.value);
-        if(isNaN(idade) || isNaN(situacao)){
-            alert("Digite os valores dos pontos.");
-        }else{
-            if(continuarExecucao){
-                cancelAnimationFrame(continuarExecucao);
-            }
-            desenharECG(canvas,ctx, idade, situacao);
-        }
-    })
-
-    // Ouvinte para o botão transferir para ViewPort
+    //*********************************************OUVINTES DA ENTRADA DA VP E DO CANVASVP************************************************* */
+        // Ouvinte para o botão transferir para ViewPort
     btnTransferirParaViewPort.addEventListener('click', () => {
         //ativa o botão de limpar viewPort
         btnLimparViewPort.disabled = false;
@@ -777,86 +884,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Chama a função processarListaViewport com os valores calculados
         processarListaViewport(listaParaAViewPort, Xmin, Xmax, Ymin, Ymax, Umin, Umax, Vmin, Vmax, ctxViewPort);
     });
-
-    btnAplicaTransformacoes3D.addEventListener('click', () => {
-        aplicarTransformacao3D();
-    })
-
-    //Ouvinte para verificar se a opção selecionada foi a de transformações ou Cohen e desenhar no canvas
-    inputOpcoes2D.addEventListener('change', () => {
-        var opcaoSelecionada = inputOpcoes2D.value;
-        if(opcaoSelecionada === "opcao8"){
-            limpaTela(ctx);
-            limparSaidaDeDadosTextarea();
-            desenhar.Eixos2D(ctx, canvas);
-            desenhar.Quadrado(matrizBaseGeral, ctx);
-        }
-        else if(opcaoSelecionada === "opcao9"){
-            limpaTela(ctx);
-            limparSaidaDeDadosTextarea();
-            desenhar.Eixos2D(ctx, canvas);
-            desenhar.Quadrado(matrizBaseGeral, ctx);
-        }
-        else if(opcaoSelecionada === "opcao10"){
-            limpaTela(ctx);
-            limparSaidaDeDadosTextarea();
-            desenhar.CohenSutherland(ctx, altura,largura);
-            desenhar.Quadrado(matrizAreaDeRecorte, ctx);
-        }
-        else if(opcaoSelecionada === "opcao11"){
-            limpaTela(ctx);
-            desenhar.batimentosCardiacos(ctx);
-        }
-        else{
-            limpaTela(ctx);
-            limparSaidaDeDadosTextarea();
-        }        
-    });
-
-    inputOpcoes3D.addEventListener('change', () => {
-        let opcao = inputOpcoes3D.value;
-
-        if(opcao === "opcao1"){
-            limparSaidaDeDadosTextarea();
-            desenhar3D.Cubo(canvas3D, matrizBaseGeral3D, facesCubo);
-            /* CRIAR FUNÇÃO DE DESENHAR CUBO */
-        }else if(opcao === "opcao2"){
-            limparSaidaDeDadosTextarea();
-            desenhar3D.Casa(canvas3D);
-            // desenhar galpão
-        }else {
-            // nengum selecionado
-            limpaTela(ctx);
-            
-        }
-    });
-
-    // limpa a tela se mudar de 2d para 3d ou vice versa, alem de mudar o canvas de 2d pra 3d
-    checkboxEscolhido2dE3d.forEach(function(checkbox) {
-        checkbox.addEventListener('click', function() {
-            if (this.id === '2D') {
-                if (this.checked) {
-                    document.getElementById('3D').checked = false;
-                    canvas3D.style.display = 'none';
-                    canvas.style.display = 'block'; 
-                    limpaTela(ctx);
-                    
-                }
-            } else if (this.id === '3D') {
-                if (this.checked) {
-                    document.getElementById('2D').checked = false;
-                    canvas.style.display = 'none';
-                    canvas3D.style.display = 'block';
-                    desativarAtualizacaoCoordenadas();
-                    desenhar3D.Cubo(canvas3D, matrizBaseGeral3D, facesCubo);
-                    limpaTela(ctx);
-
-                }
-            }
-        });
-    });
-
-    //*********************************************OUVINTES DA ENTRADA DA VP E DO CANVASVP************************************************* */
 
     // Mostrar o canvasModal ao clicar no botão
     btnVisualizar.addEventListener("click", function() {
