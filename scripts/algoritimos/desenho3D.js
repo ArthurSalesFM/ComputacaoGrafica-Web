@@ -1,16 +1,16 @@
 import * as THREE from "../tree/three.module.js"
-import { isometrica } from "./projecoes.js";
+import { isometrica , perspectiva, ortografica} from "./projecoes.js";
 
 export function Cubo(canvas, matrizBase, facesCubo) {
     // Cria a cena a ser renderizada
     const scene = new THREE.Scene();
-
+    
     // Cria a perspectiva de visualização 3D
     const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(10,5, 15);
     camera.lookAt(scene.position);
-
-    // Cria o renderizador
+    
+    //Cria o renderizador
     const renderer = new THREE.WebGLRenderer({ canvas: canvas });
     renderer.setClearColor(0xFFFFFF, 1);
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
@@ -50,8 +50,7 @@ export function Cubo(canvas, matrizBase, facesCubo) {
     renderer.render(scene, camera);
 }
 
-// Função de desenho do cubo
-export function CuboVisualizacao(canvas, matrizBase, facesCubo) {
+export function CuboVisualizacao(canvas, matrizBase, facesCubo, projecao) {
     // Cena
     const scene = new THREE.Scene();
 
@@ -59,16 +58,27 @@ export function CuboVisualizacao(canvas, matrizBase, facesCubo) {
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    camera.position.set(10, 5, 15);
-    camera.lookAt(scene.position);
+    camera.position.set(0, 0, 15);
+    
 
     // Renderizador
     const renderer = new THREE.WebGLRenderer({ canvas: canvas });
     renderer.setClearColor(0xFFFFFF, 1);
     renderer.setSize(width, height);
 
-    // Aplicar a projeção isométrica
-    const matrizBaseProj = isometrica(matrizBase, Math.PI / 4, Math.PI / 6);
+    // Aplicar a projeção selecionada
+    let matrizBaseProj;
+    if (projecao === 'perspectiva1') {
+        matrizBaseProj = perspectiva(matrizBase);
+    } else if (projecao === 'isometrica') {
+        matrizBaseProj = isometrica(matrizBase);
+    } else if (projecao === 'ortografica') {
+        matrizBaseProj = ortografica(matrizBase);
+    } else {
+        camera.position.set(10, 4, 15);
+        matrizBaseProj = matrizBase;
+    }
+    camera.lookAt(scene.position);
 
     // Converte a matriz de coordenadas para um formato adequado para BufferGeometry
     const vertices = [];
@@ -93,18 +103,13 @@ export function CuboVisualizacao(canvas, matrizBase, facesCubo) {
     boxGeometry.setIndex(indices);
 
     // Cria o material e o cubo 3D
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
+    const material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true});
     const cube = new THREE.Mesh(boxGeometry, material);
     scene.add(cube);
-
-    // Adiciona eixos cartesianos (opcional)
-    let eixosCartezianos = new THREE.AxesHelper(25);
-    scene.add(eixosCartezianos);
 
     // Renderiza a cena
     renderer.render(scene, camera);
 }
-
 
 //função de desenho da casa
 export function Casa(canvas) {
