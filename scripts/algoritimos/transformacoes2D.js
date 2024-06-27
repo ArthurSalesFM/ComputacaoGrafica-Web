@@ -69,35 +69,53 @@ export function Escala(matrizBase, sx, sy) {
 
 // Função de Rotação
 export function Rotacao(matrizBase, angulo) {
+    let matrizResultado = [];
     // Converte o ângulo para radianos
     angulo = angulo * (Math.PI / 180);
-
-    // Define o centro do polígono
-    const centroX = (matrizBase[0][0] + matrizBase[0][2]) / 2;
-    const centroY = (matrizBase[1][0] + matrizBase[1][2]) / 2;
 
     // Calcular seno e cosseno do ângulo
     const cos_theta = Math.cos(angulo);
     const sin_theta = Math.sin(angulo);
 
-    // Matriz de transformação de rotação anti-horário
     const matrizRotacao = [
-        [cos_theta, sin_theta, centroX * (1 - cos_theta) - centroY * sin_theta],
-        [-sin_theta, cos_theta, centroY * (1 - cos_theta) + centroX * sin_theta],
+        [cos_theta, sin_theta, 0],
+        [-sin_theta, cos_theta, 0],
         [0, 0, 1]
     ];
 
-    const matrizResultado = multiplicarMatrizes(matrizRotacao, matrizBase);
-    
-    setarDadosParaSaidaDeDados("\Rotação.\n\n" + 
-        "Angulo : " + angulo.toFixed(4) + "\n" +
-        "Cos. Theta : " + cos_theta.toFixed(4) + "\n" +  
-        "Sin. Theta : " + sin_theta.toFixed(4) + "\n\n" +
-        "Matriz Base: " + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizBase) + "\n\n" +
-        "Matriz de Rotação: " + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizRotacao) + "\n\n" +
-        "Matriz Resultado: "  + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizResultado)
-    );
-    
+    if(!estaNaOrigem(matrizBase)){
+        //armazena onde os obj estava antes da translação para origem
+        const tx = matrizBase[0][0];
+        const ty = matrizBase[1][0];
+
+        // translada para ortigem (ja mostra na saida de dados)
+        matrizBase = Translacao(matrizBase, -tx, -ty);
+
+        //aplica a escala e em seguida mostra as informações de escala na saida de dados
+        matrizResultado = multiplicarMatrizes(matrizRotacao, matrizBase);
+        setarDadosParaSaidaDeDados("\Rotação.\n\n" + 
+            "Angulo : " + angulo.toFixed(4) + "\n" +
+            "Cos. Theta : " + cos_theta.toFixed(4) + "\n" +  
+            "Sin. Theta : " + sin_theta.toFixed(4) + "\n\n" +
+            "Matriz Base: " + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizBase) + "\n\n" +
+            "Matriz de Rotação: " + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizRotacao) + "\n\n" +
+            "Matriz Resultado: "  + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizResultado)
+        );
+        //aplica a translação para os coordenadas iniciais
+        matrizResultado = Translacao(matrizResultado,tx, ty);
+
+    }else {
+        const matrizResultado = multiplicarMatrizes(matrizRotacao, matrizBase);
+        setarDadosParaSaidaDeDados("\Rotação.\n\n" + 
+            "Angulo : " + angulo.toFixed(4) + "\n" +
+            "Cos. Theta : " + cos_theta.toFixed(4) + "\n" +  
+            "Sin. Theta : " + sin_theta.toFixed(4) + "\n\n" +
+            "Matriz Base: " + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizBase) + "\n\n" +
+            "Matriz de Rotação: " + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizRotacao) + "\n\n" +
+            "Matriz Resultado: "  + "\n" + setarDadosParaSaidaDeDadosMatrizes(matrizResultado)
+        );
+    }
+
     return matrizResultado;
 }
 
