@@ -37,6 +37,7 @@ export function escala3D(matrizBase, sx, sy, sz) {
         return matrizBase;
 
     } else {
+        //aplica escala
         return matrizBase.map(vertice => {
             const verticeTransformado = multiplicarMatrizes(matrizEscala, [[vertice[0]], [vertice[1]], [vertice[2]], [vertice[3]]]);
             return [verticeTransformado[0][0], verticeTransformado[1][0], verticeTransformado[2][0], verticeTransformado[3][0]];
@@ -56,6 +57,13 @@ export function rotacaoX3D(matrizBase, angulo) {
         [0, 0, 0, 1]
     ];
 
+    //const matrizRotacao = [
+    //    [cos, -sin, 0, 0],
+    //    [sin, cos, 0, 0],
+    //    [0, 0, 1, 0],
+    //    [0, 0, 0, 1]
+    //];
+
     const centro = calcularCentro(matrizBase);
 
     // Verifica se o objeto já está na origem
@@ -63,7 +71,7 @@ export function rotacaoX3D(matrizBase, angulo) {
         // Translada o objeto para a origem
         matrizBase = translacao3D(matrizBase, -centro[0] + 1, -centro[1] + 1, -centro[2] + 1);
 
-        // Aplica a escala
+        // Aplica a rotação
         matrizBase = matrizBase.map(vertice => {
             const verticeTransformado = multiplicarMatrizes(matrizRotacao, [[vertice[0]], [vertice[1]], [vertice[2]], [vertice[3]]]);
             return [verticeTransformado[0][0], verticeTransformado[1][0], verticeTransformado[2][0], verticeTransformado[3][0]];
@@ -99,7 +107,7 @@ export function rotacaoY3D(matrizBase, angulo) {
         // Translada o objeto para a origem
         matrizBase = translacao3D(matrizBase, -centro[0] + 1, -centro[1] + 1, -centro[2] + 1);
 
-        // Aplica a escala
+        // Aplica a rotação
         matrizBase = matrizBase.map(vertice => {
             const verticeTransformado = multiplicarMatrizes(matrizRotacao, [[vertice[0]], [vertice[1]], [vertice[2]], [vertice[3]]]);
             return [verticeTransformado[0][0], verticeTransformado[1][0], verticeTransformado[2][0], verticeTransformado[3][0]];
@@ -135,7 +143,7 @@ export function rotacaoZ3D(matrizBase, angulo) {
         // Translada o objeto para a origem
         matrizBase = translacao3D(matrizBase, -centro[0] + 1, -centro[1] + 1, -centro[2] + 1);
 
-        // Aplica a escala
+        // Aplica a rotação
         matrizBase = matrizBase.map(vertice => {
             const verticeTransformado = multiplicarMatrizes(matrizRotacao, [[vertice[0]], [vertice[1]], [vertice[2]], [vertice[3]]]);
             return [verticeTransformado[0][0], verticeTransformado[1][0], verticeTransformado[2][0], verticeTransformado[3][0]];
@@ -168,7 +176,7 @@ export function cisalhamentoGeral3D(matrizBase, shxy, shxz, shyx, shyz, shzx, sh
         // Translada o objeto para a origem
         matrizBase = translacao3D(matrizBase, -centro[0] + 1, -centro[1] + 1, -centro[2] + 1);
 
-        // Aplica a escala
+        // Aplica a cisalhamento
         matrizBase = matrizBase.map(vertice => {
             const verticeTransformado = multiplicarMatrizes(matrizCisalhamento, [[vertice[0]], [vertice[1]], [vertice[2]], [vertice[3]]]);
             return [verticeTransformado[0][0], verticeTransformado[1][0], verticeTransformado[2][0], verticeTransformado[3][0]];
