@@ -52,6 +52,11 @@ window.onload = function() {
     const xyReflexao3D =  document.getElementById('xyReflexao3D');
     const xzReflexao3D = document.getElementById('xzReflexao3D');
     const yzReflexao3D = document.getElementById('yzReflexao3D');
+
+    //inputs de pespectivas 3D
+    const projecaoPerspectiva = document.getElementById('projecaoPerspectiva');
+    const projecaoParalelaIsometrica = document.getElementById('projecaoParalelaIsometrica');
+    const projecaoParalelaOrtografica = document.getElementById('projecaoParalelaOrtografica');
     
     // Inputs de entradas das transformações 2D
     const xTranslacao = document.getElementById('xTranslacao');
@@ -547,5 +552,32 @@ window.onload = function() {
         });        
     });
 
+    //impede usuário selecionar mais de uma opção de prespectiva
+    projecaoPerspectiva.addEventListener('click', () => {
+        projecaoParalelaIsometrica.disabled = true;
+        projecaoParalelaOrtografica.disabled = true;
+        if(projecaoPerspectiva.checked === false){
+            projecaoParalelaIsometrica.disabled = false;
+            projecaoParalelaOrtografica.disabled = false;
+        }
+    })
+
+    projecaoParalelaIsometrica.addEventListener('click', () => {
+        projecaoPerspectiva.disabled = true;
+        projecaoParalelaOrtografica.disabled = true;
+        if(projecaoParalelaIsometrica.checked === false){
+            projecaoPerspectiva.disabled = false;
+            projecaoParalelaOrtografica.disabled = false;
+        }
+    })
+
+    projecaoParalelaOrtografica.addEventListener('click', () => {
+        projecaoParalelaIsometrica.disabled = true;
+        projecaoPerspectiva.disabled = true;
+        if(projecaoParalelaOrtografica.checked === false){
+            projecaoParalelaIsometrica.disabled = false;
+            projecaoPerspectiva.disabled = false;
+        }
+    })
 
 };
