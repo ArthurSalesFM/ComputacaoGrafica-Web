@@ -1,7 +1,8 @@
 import { limpaTela } from "../utils/utils.js";
 
-//variavel de controle do loop de execução para parar quando clicar no botao de limpar
+// Variável de controle do loop de execução para parar quando clicar no botão de limpar
 export let continuarExecucao;
+let velocidadeDesenho = 0.5; // Controla a velocidade do desenho
 
 export function desenharECG(canvas, ctx, idade, situacao) {
     class Ponto {
@@ -91,19 +92,63 @@ export function desenharECG(canvas, ctx, idade, situacao) {
             // Pintar o fundo de preto
             ctx.fillStyle = 'black';
             ctx.fillRect(-canvas.width / 2, ((-canvas.height / 2)-5), canvas.width, canvas.height);
-
-            ctx.strokeStyle = 'Lime';
+        
+            ctx.strokeStyle = 'lime';
             ctx.lineWidth = 1;
-            ctx.beginPath();
-            for (var i = 1; i < this.indicePontoAtual; i++) {
-                ctx.moveTo(this.pontos[i - 1].x, this.pontos[i - 1].y);
-                ctx.lineTo(this.pontos[i].x, this.pontos[i].y);
+            
+            for (let i = 1; i < this.indicePontoAtual; i++) {
+                let x0 = this.pontos[i - 1].x;
+                let y0 = this.pontos[i - 1].y;
+                let x1 = this.pontos[i].x;
+                let y1 = this.pontos[i].y;
+                
+                this.desenharLinha(x0, y0, x1, y1);
             }
-            ctx.stroke();
-            this.indicePontoAtual++;
-
+        
+            this.indicePontoAtual += velocidadeDesenho;
+        
             if (this.indicePontoAtual >= this.pontos.length) {
                 this.reset();
+            }
+        }
+        
+        desenharLinha(x0, y0, x1, y1) {
+            // Inverte os pontos se x0 for maior que x1
+            if (x0 > x1) {
+                [x0, x1] = [x1, x0];
+                [y0, y1] = [y1, y0];
+            }
+        
+            // Calcula dx e dy
+            let dx = Math.abs(x1 - x0);
+            let dy = Math.abs(y1 - y0);
+        
+            // Define a direção de incremento para x e y
+            let sx = (x0 < x1) ? 1 : -1;
+            let sy = (y0 < y1) ? 1 : -1;
+        
+            // Inicializa as variáveis para o algoritmo de Ponto Médio
+            let err = dx - dy;
+        
+            while (true) {
+                // Pinta o pixel atual
+                ctx.fillStyle = 'lime'; // Definir a cor verde aqui
+                ctx.fillRect(x0, y0, 1, 1);
+        
+                // Verifica se atingiu o ponto final
+                if (x0 === x1 && y0 === y1) break;
+        
+                let e2 = err * 2;
+        
+                // Atualiza a posição (x0, y0) de acordo com o algoritmo de Ponto Médio
+                if (e2 > -dy) {
+                    err -= dy;
+                    x0 += sx;
+                }
+                if (e2 < dx) {
+                    err += dx;
+                    y0 += sy;
+                }
             }
         }
     }
